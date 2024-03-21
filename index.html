@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Exemple d'utilisation de Brython avec une API</title>
-  <!-- Inclure la bibliothèque Brython -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.5/brython.min.js"></script>
+  <title>Exemple d'utilisation d'une API avec JavaScript</title>
 </head>
-<body onload="brython()">
-  <h1>Exemple d'utilisation de Brythonn avec une API</h1>
+<body>
+  <h1>Exemple d'utilisation d'une API avec JavaScript</h1>
 
   <div id="output"></div>
 
-  <script type="text/python">
-    from browser import document, ajax
-    import json
+  <script>
+    function fetchUsers() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var userNames = data.map(function(user) {
+                        return user.name;
+                    });
+                    document.getElementById('output').textContent = 'Noms des utilisateurs : ' + userNames.join(', ');
+                } else {
+                    document.getElementById('output').textContent = 'Erreur lors de la récupération des utilisateurs';
+                }
+            }
+        };
+        xhr.open('GET', 'https://jsonplaceholder.typicode.com/users');
+        xhr.send();
+    }
 
-    def fetch_users():
-        req = ajax.ajax()
-        req.bind('complete', on_complete)
-        req.open('GET', 'https://jsonplaceholder.typicode.com/users')
-        req.send()
-
-    def on_complete(req):
-        if req.status == 200:
-            data = json.loads(req.text)
-            user_names = [user['name'] for user in data]
-            document['output'].text = f'Noms des utilisateurs : {", ".join(user_names)}'
-        else:
-            document['output'].text = 'Erreur lors de la récupération des utilisateurs'
-
-    fetch_users()
+    fetchUsers();
   </script>
 </body>
 </html>

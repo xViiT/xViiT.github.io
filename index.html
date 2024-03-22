@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Exemple d'utilisation d'une API avec JavaScript</title>
+  <title>Exemple d'utilisation de l'API PagerDuty avec JavaScript</title>
 </head>
 <body>
-  <h1>Exemple d'utilisation d'une API avec JavaScript</h1>
+  <h1>Exemple d'utilisation de l'API PagerDuty avec JavaScript</h1>
 
   <div id="output"></div>
 
   <script>
-    function fetchUsers() {
+    function fetchIncidents() {
+        var token = 'y_NbAkKc66ryYTWUXYEu'; // Remplacez ceci par votre propre token d'accès PagerDuty
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
-                    var userNames = data.map(function(user) {
-                        return user.name;
+                    var incidents = data.incidents;
+                    var incidentTitles = incidents.map(function(incident) {
+                        return incident.title;
                     });
-                    document.getElementById('output').textContent = 'Noms des utilisateurs : ' + userNames.join(', ');
+                    document.getElementById('output').textContent = 'Titres des incidents : ' + incidentTitles.join(', ');
                 } else {
-                    document.getElementById('output').textContent = 'Erreur lors de la récupération des utilisateurs';
+                    document.getElementById('output').textContent = 'Erreur lors de la récupération des incidents';
                 }
             }
         };
-        xhr.open('GET', 'https://jsonplaceholder.typicode.com/users');
+        xhr.open('GET', 'https://api.pagerduty.com/incidents');
+        xhr.setRequestHeader('Authorization', 'Token token=' + token);
+        xhr.setRequestHeader('Accept', 'application/vnd.pagerduty+json;version=2');
         xhr.send();
     }
 
-    fetchUsers();
+    fetchIncidents();
   </script>
 </body>
 </html>
